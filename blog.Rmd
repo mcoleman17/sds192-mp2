@@ -8,6 +8,7 @@ output: html_document
 
 ## Loading the data
 
+Hi Miranda!
 
 ```{r, include=FALSE}
 load("house_elections.rda")
@@ -15,3 +16,4 @@ load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
 ```
+
