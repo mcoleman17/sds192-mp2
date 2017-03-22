@@ -32,12 +32,39 @@ Joined_table<- candidates%>%
 ```
 
 ```{r}
-Joined_table%>%
+Final_table<-Joined_table%>%
   group_by(cand_name, cand_office_state, cand_party_affiliation)%>%
   summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
   arrange(desc(Total_contr))
 ```
 
+```{r}
+FT2<-Final_table%>%
+  group_by(cand_office_state,cand_party_affiliation)%>%
+  summarize(Total= sum(Total_contr), N = sum(N), TotalC = n())%>%
+  filter(cand_party_affiliation != "LIB", cand_office_state == "ME")%>%
+  ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) + geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black")
+FT2
+```
+
+```{r}
+House_graphs <- function(state_arg) {
+FT2<-Final_table%>%
+  group_by(cand_office_state,cand_party_affiliation)%>%
+  summarize(Total= sum(Total_contr), N = sum(N), TotalC = n())%>%
+  filter(cand_party_affiliation != "LIB", cand_office_state == state_arg)%>%
+  ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) + geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black") +ggtitle(state_arg)
+FT2  
+}
+```
+
+```{r}
+State<-c ("ME", "IL", "MA")
+lapply(State, FUN = House_graphs)
+```
+
+
+--> 
 Suggestions: 
 facet-wrap by state
 color = party : red/blue/green
@@ -48,4 +75,5 @@ bar graph
   Context of post: Rather than examining committee contribution at a presidential level, we decided to examine contributions at a local level. Since examining all the house candidates would create a graphic that is rather clustered, we decided to examine the amount in three states that are of particular interest to us. These states are Illinois, Maine, Massachussetts.
   
   General Conclution:
-
+ggplot(diamonds, aes(cut, fill=cut)) + geom_bar() +
+  facet_grid(. ~ clarity)
