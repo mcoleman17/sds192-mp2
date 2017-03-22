@@ -1,6 +1,6 @@
 ---
 title: "Mini-Project 2"
-author: "Lidia Ortiz"
+author: "Lidia Ortiz & Miranda COleman"
 date: "March 24, 2017"
 output: html_document
 ---
@@ -44,7 +44,9 @@ Joined_table%>%
   group_by(cand_office_state,cand_party_affiliation)%>%
   summarize(Total= sum(Total_contr), N = sum(N))%>%
   filter(cand_party_affiliation != "LIB", cand_office_state == state_arg)%>%
-  ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) + geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black") +ggtitle(state_arg)
+  ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +      
+  geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black")+    
+  ggtitle(state_arg)
 }
 ```
 
