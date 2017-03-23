@@ -1,20 +1,13 @@
 ---
 title: "Mini-Project 2"
-
 author: "Lidia Ortiz & Miranda COleman"
-
-author: "Your Name Here"
-
 date: "March 24, 2017"
 output: html_document
 ---
 
 
 ## Loading the data
-
-Hi Miranda!
-
-```{r, include=FALSE}
+  ```{r, include=FALSE}
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
@@ -27,55 +20,40 @@ library(ggplot2)
 library(scales)
 library(RColorBrewer)
 library(tidyverse)
+library(grid)
+library(gridExtra)
 ```
 
-```{r}
-
-glimpse(contributions)
-```
 
 ```{r}
 Joined_table<- candidates%>%
   inner_join(contributions, by=c("cand_id", "cand_id"))%>%
-   filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))%>%
-
-Joined_table<- candidates%>%
-  inner_join(contributions, by=c("cand_id", "cand_id"))%>%
-   filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL")) %>%
-
+  filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))%>%
   group_by(cand_name, cand_office_state, cand_party_affiliation)%>%
   summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
   arrange(desc(Total_contr))
 ```
 
+
+
 ```{r}
 House_graphs <- function(state_arg) {
-Joined_table%>%
-  group_by(cand_office_state,cand_party_affiliation)%>%
-  summarize(Total= sum(Total_contr), N = sum(N))%>%
-  filter(cand_party_affiliation != "LIB", cand_office_state == state_arg)%>%
-
-  ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +      
-  geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black")+    
-  ggtitle(state_arg)
-
-  ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) + geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black") +ggtitle(state_arg)
-
+  Political_graphs<-Joined_table%>%
+    group_by(cand_office_state,cand_party_affiliation)%>%
+    summarize(Total= sum(Total_contr), N = sum(N))%>%
+    filter(cand_party_affiliation != "LIB", cand_office_state == state_arg)%>%
+    ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +      
+    geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black")+    
+    ggtitle(state_arg)+  labs(caption = "Note. Numbers inside the bars represent the total number of contributions for each party.")
 }
 ```
+
+
 
 ```{r}
 State<-c ("ME", "IL", "MA")
 lapply(State, FUN = House_graphs)
 ```
-
-   git config --global --edit
-
-After doing this, you may fix the identity used for this commit with:
-
-    git commit --amend --reset-author
-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
 
 Suggestions: 
