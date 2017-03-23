@@ -7,7 +7,8 @@ output: html_document
 
 
 ## Loading the data
-  ```{r, include=FALSE}
+
+```{r, include=FALSE}
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
@@ -49,17 +50,10 @@ House_graphs <- function(state_arg) {
 ```
 
 
-
 ```{r}
 State<-c ("ME", "IL", "MA")
 lapply(State, FUN = House_graphs)
 ```
-
-
-Suggestions: 
-facet-wrap by state
-color = party : red/blue/green
-bar graph
 
 
   Title: Contribution to the 2012 House Election in selected states 
