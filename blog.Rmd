@@ -1,6 +1,10 @@
 ---
 title: "Mini-Project 2"
+<<<<<<< HEAD
 author: "Lidia Ortiz & Miranda COleman"
+=======
+author: "Your Name Here"
+>>>>>>> b182d8f4e6f615f2cbb3a63ac165fe2490ae0064
 date: "March 24, 2017"
 output: html_document
 ---
@@ -8,6 +12,7 @@ output: html_document
 
 ## Loading the data
 
+Hi Miranda!
 
 ```{r, include=FALSE}
 load("house_elections.rda")
@@ -25,6 +30,7 @@ library(tidyverse)
 ```
 
 ```{r}
+<<<<<<< HEAD
 glimpse(contributions)
 ```
 
@@ -32,21 +38,33 @@ glimpse(contributions)
 Joined_table<- candidates%>%
   inner_join(contributions, by=c("cand_id", "cand_id"))%>%
    filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))%>%
+=======
+Joined_table<- candidates%>%
+  inner_join(contributions, by=c("cand_id", "cand_id"))%>%
+   filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL")) %>%
+>>>>>>> b182d8f4e6f615f2cbb3a63ac165fe2490ae0064
   group_by(cand_name, cand_office_state, cand_party_affiliation)%>%
   summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
   arrange(desc(Total_contr))
 ```
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b182d8f4e6f615f2cbb3a63ac165fe2490ae0064
 ```{r}
 House_graphs <- function(state_arg) {
 Joined_table%>%
   group_by(cand_office_state,cand_party_affiliation)%>%
   summarize(Total= sum(Total_contr), N = sum(N))%>%
   filter(cand_party_affiliation != "LIB", cand_office_state == state_arg)%>%
+<<<<<<< HEAD
   ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +      
   geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black")+    
   ggtitle(state_arg)
+=======
+  ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) + geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black") +ggtitle(state_arg)
+>>>>>>> b182d8f4e6f615f2cbb3a63ac165fe2490ae0064
 }
 ```
 
@@ -56,10 +74,23 @@ lapply(State, FUN = House_graphs)
 ```
 
 
+<<<<<<< HEAD
 --> 
+=======
+Suggestions: 
+facet-wrap by state
+color = party : red/blue/green
+bar graph
+>>>>>>> b182d8f4e6f615f2cbb3a63ac165fe2490ae0064
 
   Title: Contribution to the 2012 House Election in selected states 
   
   Context of post: Rather than examining committee contribution at a presidential level, we decided to examine contributions at a local level. Since examining all the house candidates would create a graphic that is rather clustered, we decided to examine the amount in three states that are of particular interest to us. These states are Illinois, Maine, Massachussetts.
   
+<<<<<<< HEAD
  
+=======
+  General Conclution:
+ggplot(diamonds, aes(cut, fill=cut)) + geom_bar() +
+  facet_grid(. ~ clarity)
+>>>>>>> b182d8f4e6f615f2cbb3a63ac165fe2490ae0064
