@@ -20,43 +20,98 @@ library(ggplot2)
 library(scales)
 library(RColorBrewer)
 library(tidyverse)
-library(grid)
-library(gridExtra)
+library(knitr)
 ```
 
+```{r echo=FALSE, message=F, warning=F}
+#Joining the Candidates table with Contributions Table
+Tables_Joined<- candidates%>%
+  inner_join(contributions, by=c("cand_id", "cand_id"))%>%
+#Filtering  candidates based on election year, state, and office
+  filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))
+```
 
 ```{r}
-#Joining the Candidates table with COntributions Table
-Joined_table<- candidates%>%
-  inner_join(contributions, by=c("cand_id", "cand_id"))%>%
-  filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))%>%
-  group_by(cand_name, cand_office_state, cand_party_affiliation)%>%
-  summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
+Contributions_Cand<-Tables_Joined%>% 
+#Verbs~ group_by, summarize, and arrange 
+  group_by(cand_name, cand_office_state, cand_party_affiliation)%>% 
+  summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>% 
   arrange(desc(Total_contr))
 ```
 
-
-
 ```{r}
-House_graphs <- function(state_arg) {
-  Political_graphs<-Joined_table%>%
-    group_by(cand_office_state,cand_party_affiliation)%>%
+Political_graphs<-Contributions_Cand%>%
+#Verbs~ group_by, summarize, filter to arrange data (further)
+    group_by(cand_office_state,cand_party_affiliation)%>% 
     summarize(Total= sum(Total_contr), N = sum(N))%>%
-    filter(cand_party_affiliation != "LIB", cand_office_state == state_arg)%>%
-
+    filter(cand_party_affiliation != "LIB")%>% 
+#creating Visualization 
     ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +      
-    geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="White")+    
-    ggtitle(state_arg)+ labs(caption = "Note. Numbers inside the bars are the total number of contributions to each party.")+ 
-    scale_fill_manual(values=c("dodgerblue3", "red1")) + xlab("Party Affiliation") + ylab ("Total Contributions")+theme(legend.title=element_blank())
-}
+    geom_bar(stat = "identity")+
+    facet_wrap(~ cand_office_state)+
+#Adding additional info to the graphic
+    geom_text(aes(label=N), vjust=-.3, colour="black")+
+    labs(caption = "Note. Numbers on top of bars are the total number of contributions to each party.")+ 
+#Changing the colors of bars
+    scale_fill_manual(values=c("dodgerblue3", "red1")) + 
+#Changes to axis, legend, and adding title 
+    ggtitle("Contribution to the 2012 House Elections (in selected states)")+ 
+    xlab("Party Affiliation") + 
+    ylab ("Total Dollar Contributions")+
+    theme(legend.title=element_blank())
+Political_graphs
 ```
 
-# Contribution to the 2012 House Elections in selected states 
-```{r echo=FALSE, message=F, warning=F}
-State<-c ("ME", "IL", "MA")
-lapply(State, FUN = House_graphs)
+```{r kable, results = 'asis'}
+Contributions_Cand2<- candidates%>%
+#Joining the Candidates table with Contributions Table
+  inner_join(contributions, by=c("cand_id", "cand_id"))%>% 
+#Filtering candidates based on election year, state, and office
+  filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"), cand_party_affiliation != "LIB")%>% 
+#Verbs~ group_by, summarize, and select 
+  group_by(cand_office_state, cand_party_affiliation)%>% 
+  summarize(Total_contr = sum(transaction_amt), N =n(), avg_Contribution = Total_contr/N)%>% 
+  select(cand_party_affiliation,cand_office_state, avg_Contribution)
+
+kable(Contributions_Cand2)
 ```
-
-
   
-Rather than examining committee contribution at a presidential level, we decided to examine contributions at a local level. Since examining all the house candidates would create a graphic that is rather clustered, we decided to examine the amount in three states that are of particular interest to us. These states are Illinois, Maine, Massachussetts.
+```{r}
+Tables_Joined%>%
+# verbs ~select, group_by, summarize, filter
+  select(cand_name, cand_party_affiliation, cand_office_state, transaction_type, transaction_amt)%>%
+  group_by(transaction_type,cand_office_state, cand_party_affiliation)%>%
+  summarize(total_am = sum (transaction_amt), N =n())%>%
+  filter(cand_party_affiliation != "LIB")%>%
+#creating Visualization
+  ggplot(aes(y = total_am, x = transaction_type, fill = cand_party_affiliation))+
+  geom_bar(stat = "identity")+
+  facet_wrap(~ cand_office_state)+
+#Changing the colors of bars
+  scale_fill_manual(values=c("dodgerblue3", "red1")) + 
+#Changes to axis, legend, and adding title 
+  ggtitle("Contribution Information of the 2012 House Elections in Selected States")+
+  xlab("Transaction Type") + 
+  ylab ("Total Dollar Contributions")+
+  theme(legend.title=element_blank())+
+  labs(caption = "Note. For more information about the transaction types see Appendix at end of blog.")
+```
+
+
+
+## Appendix:
+List of transaction type codes and their meaning
+24A =  Independent expenditure opposing election of candidate.
+24C = Coordinated party expenditure.
+24E = ndependent expenditure advocating election of candidate.
+24K = Communication cost for candidate (only for Form 7 filer).
+24N = Communication cost against candidate (only for Form 7 filer).
+24Z = In-kind contribution made to registered filer.
+
+Note. Information came directy from the Federal Election Commission
+
+
+
+
+
+
