@@ -5,17 +5,16 @@ date: "March 24, 2017"
 output: html_document
 ---
 
-
-## Loading the data
-
-```{r, include=FALSE}
+```{r echo=FALSE, message=F, warning=F}
+#loading the Data
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
 ```
 
-```{r}
+```{r echo=FALSE, message=F, warning=F}
+#loading the libraries
 library(dplyr)
 library(ggplot2)
 library(scales)
@@ -27,6 +26,7 @@ library(gridExtra)
 
 
 ```{r}
+#Joining the Candidates table with COntributions Table
 Joined_table<- candidates%>%
   inner_join(contributions, by=c("cand_id", "cand_id"))%>%
   filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))%>%
@@ -45,17 +45,16 @@ House_graphs <- function(state_arg) {
     filter(cand_party_affiliation != "LIB", cand_office_state == state_arg)%>%
     ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +      
     geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="black")+    
-    ggtitle(state_arg)+  labs(caption = "Note. Numbers inside the bars represent the total number of contributions for each party.")
+    ggtitle(state_arg)+ labs(caption = "Note. Numbers inside the bars are the total number of contributions to each party.")
 }
 ```
 
-
-```{r}
+# Contribution to the 2012 House Elections in selected states 
+```{r echo=FALSE, message=F, warning=F}
 State<-c ("ME", "IL", "MA")
 lapply(State, FUN = House_graphs)
 ```
 
 
-  Title: Contribution to the 2012 House Election in selected states 
   
-  Context of post: Rather than examining committee contribution at a presidential level, we decided to examine contributions at a local level. Since examining all the house candidates would create a graphic that is rather clustered, we decided to examine the amount in three states that are of particular interest to us. These states are Illinois, Maine, Massachussetts.
+Rather than examining committee contribution at a presidential level, we decided to examine contributions at a local level. Since examining all the house candidates would create a graphic that is rather clustered, we decided to examine the amount in three states that are of particular interest to us. These states are Illinois, Maine, Massachussetts.
