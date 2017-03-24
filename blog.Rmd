@@ -1,6 +1,6 @@
 ---
 title: "Mini-Project 2"
-author: "Lidia Ortiz & Miranda COleman"
+author: "Lidia Ortiz & Miranda Coleman"
 date: "March 24, 2017"
 output: html_document
 ---
@@ -33,6 +33,7 @@ Joined_table<- candidates%>%
   group_by(cand_name, cand_office_state, cand_party_affiliation)%>%
   summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
   arrange(desc(Total_contr))
+Joined_table
 ```
 
 
@@ -43,11 +44,15 @@ House_graphs <- function(state_arg) {
     group_by(cand_office_state,cand_party_affiliation)%>%
     summarize(Total= sum(Total_contr), N = sum(N))%>%
     filter(cand_party_affiliation != "LIB", cand_office_state == state_arg)%>%
-
-    ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +      
-    geom_bar(stat = "identity")+geom_text(aes(label=N), vjust=1.5, colour="White")+    
-    ggtitle(state_arg)+ labs(caption = "Note. Numbers inside the bars are the total number of contributions to each party.")+ 
-    scale_fill_manual(values=c("dodgerblue3", "red1")) + xlab("Party Affiliation") + ylab ("Total Contributions")+theme(legend.title=element_blank())
+    ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +  
+    geom_bar(stat = "identity")+ 
+    geom_text(aes(label=N), vjust=1.5, colour="White")+    
+    ggtitle(state_arg)+ 
+    labs(caption = "Note. Numbers inside the bars are the total number of contributions to each party.")+ 
+    scale_fill_manual(values=c("dodgerblue3", "red1")) + 
+    xlab("Party Affiliation") +
+    ylab ("Total Contributions")+ 
+    theme(legend.title=element_blank())
 }
 ```
 
@@ -60,3 +65,14 @@ lapply(State, FUN = House_graphs)
 
   
 Rather than examining committee contribution at a presidential level, we decided to examine contributions at a local level. Since examining all the house candidates would create a graphic that is rather clustered, we decided to examine the amount in three states that are of particular interest to us. These states are Illinois, Maine, Massachussetts.
+
+```{r}
+Joined_table2<- candidates%>%
+  inner_join(contributions, by=c("cand_id", "cand_id"))%>%
+  filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))%>%
+  group_by(cand_office_state, cand_party_affiliation)%>%
+  summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
+  arrange(desc(Total_contr))
+Joined_table2
+```
+
