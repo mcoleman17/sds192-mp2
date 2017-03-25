@@ -33,7 +33,6 @@ Joined_table<- candidates%>%
   group_by(cand_name, cand_office_state, cand_party_affiliation)%>%
   summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
   arrange(desc(Total_contr))
-Joined_table
 ```
 
 
@@ -73,6 +72,6 @@ Joined_table2<- candidates%>%
   group_by(cand_office_state, cand_party_affiliation)%>%
   summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
   arrange(desc(Total_contr))
-Joined_table2
+
 ```
 
