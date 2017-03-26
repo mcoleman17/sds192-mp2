@@ -4,10 +4,9 @@ author: "Lidia Ortiz & Miranda Coleman"
 date: "March 24, 2017"
 output: html_document
 ---
-### Contributions to the 2012 House Elections in Selected States
-
+  
+  
 In this project we chose to exam the campaign contributions to candidates in the 2012 House Elections in the states of Illinois, Maine, and Massachsuetts. Illinois and Maine are Miranda and Lidia's home states, respectively, while Massachusetts is the state where we go to College. 
-
 
 ```{r echo=FALSE, message=F, warning=F}
 #loading the Data
@@ -30,96 +29,112 @@ library(knitr)
 ```{r echo=FALSE, message=F, warning=F}
 #Joining the Candidates table with Contributions Table
 Tables_Joined<- candidates%>%
-  inner_join(contributions, by=c("cand_id", "cand_id"))%>%
+inner_join(contributions, by=c("cand_id", "cand_id"))%>%
 #Filtering  candidates based on election year, state, and office
-  filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))
+filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))
 ```
 
+# Contributions to the 2012 House Elections in Selected States 
 ```{r}
 Contributions_Cand<-Tables_Joined%>% 
 #Verbs~ group_by, summarize, and arrange 
-  group_by(cand_name, cand_office_state, cand_party_affiliation)%>% 
-  summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>% 
-  arrange(desc(Total_contr))
+group_by(cand_name, cand_office_state, cand_party_affiliation)%>% 
+summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>% 
+arrange(desc(Total_contr))
 ```
+
 
 ```{r}
 Political_graphs<-Contributions_Cand%>%
 #Verbs~ group_by, summarize, filter to arrange data (further)
-    group_by(cand_office_state,cand_party_affiliation)%>% 
-    summarize(Total= sum(Total_contr), N = sum(N))%>%
-    filter(cand_party_affiliation != "LIB")%>% 
+group_by(cand_office_state,cand_party_affiliation)%>% 
+summarize(Total= sum(Total_contr), N = sum(N))%>%
+filter(cand_party_affiliation != "LIB")%>% 
 #creating Visualization 
-    ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +  
-    geom_bar(stat = "identity")+
-    facet_wrap(~ cand_office_state)+
+ggplot(aes(x= cand_party_affiliation, y = Total, fill = cand_party_affiliation)) +  
+geom_bar(stat = "identity")+
+facet_wrap(~ cand_office_state)+
 #Adding additional info to the graphic
-    geom_text(aes(label=N), vjust=-.3, size = 3, colour="black")+
-    labs(caption = "Note: Numbers on top of bars are the total number of committees for each party.")+ 
+geom_text(aes(label=N), vjust=-.3, size = 3, colour="black")+
+labs(caption = "Note: Numbers on top of bars are the total number of committees for each party.")+ 
 #Changing the colors of bars
-    scale_fill_manual(values=c("dodgerblue3", "red1")) + 
+scale_fill_manual(values=c("dodgerblue3", "red1")) + 
 #Changes to axis, legend, and adding title 
-    ggtitle("Contributions to the 2012 House Elections (in selected states)")+ 
-    xlab("Party Affiliation") + 
-    ylab ("Total Dollar Contributions")+
-    theme(legend.title=element_blank())
+ggtitle("Contributions to the 2012 House Elections (in selected states)")+ 
+xlab("Party Affiliation") + 
+ylab ("Total Dollar Contributions")+
+theme(legend.title=element_blank())
 
 Political_graphs
 ```
-The graphic above shows the total contributions to candidates in the house elections, depending on party affiliation. In the State of Illinois, there were 1452 more committees contributing money to republican candidates then Democratic candidates, and the republicans had a higher total number of contributions than Democrats. Prior to this election, the Republicans held 11 seats in Illinois, and the Democrats held eight; However, in this election the Republicans lost five seats, and the Democrats gained four seats. This shows that even though Republicans had more money from which to draw from for the campaign, the turnout of constituents still matters. Meanwhile in both Massachusetts and Maine, Democrats held all of the house seats prior the election, and maintained control in all seats.
 
+
+
+The graphic above shows the total contributions to candidates in the house elections by party affiliation. 
+
+In Both Massachusetts and Maine, Democrats (Who had a greater number of committees contributing money to the candidates and a higher total number of contributions) held all of the house seats prior the election, and maintained control of all seats. 
+
+Prior to this election, the Republicans held 11 seats in Illinois, and the Democrats held eight. However, in this election the Republicans lost five seats, and the Democrats gained four seats. This interesting given that the graphs above shows that in this state, there were more committees contributing money to Republican candidates with a higher total number of contributions when compared to their Democratic counterparts. This shows that even though Republicans had more money from which to draw from for the campaign, the turnout of constituents still matters.
 
 ```{r kable, results = 'asis'}
 Contributions_Cand2<- candidates%>%
 #Joining the Candidates table with Contributions Table
-  inner_join(contributions, by=c("cand_id", "cand_id"))%>% 
+inner_join(contributions, by=c("cand_id", "cand_id"))%>% 
 #Filtering candidates based on election year, state, and office
-  filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"), cand_party_affiliation != "LIB")%>% 
+filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"), cand_party_affiliation != "LIB")%>% 
 #Verbs~ group_by, summarize, and select 
-  group_by(cand_office_state, cand_party_affiliation)%>% 
-  summarize(Total_contr = sum(transaction_amt), N =n(), avg_Contribution = Total_contr/N)%>% 
-  select(cand_party_affiliation,cand_office_state, avg_Contribution)
+group_by(cand_office_state, cand_party_affiliation)%>% 
+summarize(Total_contr = sum(transaction_amt), N =n(), avg_Contribution = Total_contr/N)%>% 
+select(cand_party_affiliation,cand_office_state, avg_Contribution)
 
 kable(Contributions_Cand2)
 ```
 
-The data that we used to come up with first graphic tells us interestingly that even though the Republicans candidates in the states of Massachusetts and Maine had less committees to donate to them, they on average contributed more money than Democrat committees; meanwhile, in the state of Illinois, the Democratic Committees contributed more on average than Republicans.
-  
-```{r}
 
+
+**Altogether, the graph and table show that even though there were less committees donating to the Rebulican candidates in Massachussetts and Maine, on average they contributed more money; Illinois Republican candidates had a higher number committees contributing to them with a higher average contribution.**
+
+# Post-hoc Analysis: Transaction Type 
+
+When we did our peer presentation, one piece of feedback that we received is that we didn't filter by any of the transaction types in our main graph. At that time we told our peers if we filtered by certain transaction types, then we would get very few results for the state of Maine. As such we decided to include the graph below, which classifies the contributions to the candidates based on their transaction type. 
+
+```{r}
 Joined_table2<- candidates%>%
-  inner_join(contributions, by=c("cand_id", "cand_id"))%>%
-  filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))%>%
-  group_by(cand_office_state, cand_party_affiliation)%>%
-  summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
-  arrange(desc(Total_contr))
+inner_join(contributions, by=c("cand_id", "cand_id"))%>%
+filter(cand_office == "H", cand_election_yr == 2012, cand_office_state == c("ME", "MA", "IL"))%>%
+group_by(cand_office_state, cand_party_affiliation)%>%
+summarize(Total_contr = sum(transaction_amt), N =n(), avg = Total_contr/N)%>%
+arrange(desc(Total_contr))
 
 
 Tables_Joined%>%
 # verbs ~select, group_by, summarize, filter
-  select(cand_name, cand_party_affiliation, cand_office_state, transaction_type, transaction_amt)%>%
-  group_by(transaction_type,cand_office_state, cand_party_affiliation)%>%
-  summarize(total_am = sum (transaction_amt), N =n())%>%
-  filter(cand_party_affiliation != "LIB")%>%
+select(cand_name, cand_party_affiliation, cand_office_state, transaction_type, transaction_amt)%>%
+group_by(transaction_type,cand_office_state, cand_party_affiliation)%>%
+summarize(total_am = sum (transaction_amt), N =n())%>%
+filter(cand_party_affiliation != "LIB")%>%
 #creating Visualization
-  ggplot(aes(y = total_am, x = transaction_type, fill = cand_party_affiliation))+
-  geom_bar(stat = "identity")+
-  facet_wrap(~ cand_office_state)+
+ggplot(aes(y = total_am, x = transaction_type, fill = cand_party_affiliation))+
+geom_bar(stat = "identity")+
+facet_wrap(~ cand_office_state)+
 #Changing the colors of bars
-  scale_fill_manual(values=c("dodgerblue3", "red1")) + 
+scale_fill_manual(values=c("dodgerblue3", "red1")) + 
 #Changes to axis, legend, and adding title 
-  ggtitle("Contribution Information of the 2012 House Elections in Selected States")+
-  xlab("Transaction Type") + 
-  ylab ("Total Dollar Contributions")+
-  theme(legend.title=element_blank())+
-  labs(caption = "Note. For more information about the transaction types see Appendix at end of blog.")
+ggtitle("Contribution Information of the 2012 House Elections in Selected States")+
+xlab("Transaction Type") + 
+ylab ("Total Dollar Contributions")+
+theme(legend.title=element_blank())+
+labs(caption = "Note. For more information about the transaction types see Appendix at end of blog.")
 ```
 
-When we did our peer presentation, one piece of feedback that we received is that we didn't filter by any of the transaction types in our main graph. At that time we told our peers if we filtered by certain transaction types, then we would get no results for the state of Maine, due to the fact that no contributions were classified under this transaction type. As such we decided to include the above bar graph, which classifies the contributions to the candidates based on their transaction type. This graph shows that in the State of Maine, contributions were only classified under two different transaction types. The most interesting contributions come from the state of Illinois, where the majority of contributions for both parties were designated towards opposing a candidates election. 
+The graph above shows that in the State of Maine, contributions were only classified under two different transaction types, either party expenditure or communication costs for candidate. 
+
+In Massachussets, most of the contributions for the Democratic candidates were for communcation costs for the candidates. For Republican candidates, about equal amounts were spent for opposingn the candidates as for advocating the condidate. Perhaps a slight more advocating. 
+
+The most interesting contributions come from the state of Illinois, where the majority of contributions for both parties were designated towards opposing a candidates election. 
 
 
-
-## Appendix:
+# Appendix
 List of transaction type codes and their meaning:  
 24A =  Independent expenditure opposing election of candidate.  
 24C = Coordinated party expenditure.  
@@ -133,7 +148,5 @@ Note. Information came directy from the Federal Election Commission
 
 
 
-
-  
 
 
