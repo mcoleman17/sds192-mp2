@@ -1,7 +1,7 @@
 ---
 title: "Mini-Project 2"
 author: "Lidia Ortiz & Miranda Coleman"
-date: "March 24, 2017"
+date: "March 26, 2017"
 output: html_document
 ---
   
@@ -72,9 +72,9 @@ Political_graphs
 
 The graphic above shows the total contributions to candidates in the house elections by party affiliation. 
 
-In Both Massachusetts and Maine, Democrats (Who had a greater number of committees contributing money to the candidates and a higher total number of contributions) held all of the house seats prior the election, and maintained control of all seats. 
+In both Massachusetts and Maine, Democrats (who had a greater number of committees contributing money to the candidates and a higher total number of contributions) held all of the house seats prior the election, and maintained control of all seats. 
 
-Prior to this election, the Republicans held 11 seats in Illinois, and the Democrats held eight. However, in this election the Republicans lost five seats, and the Democrats gained four seats. This interesting given that the graphs above shows that in this state, there were more committees contributing money to Republican candidates with a higher total number of contributions when compared to their Democratic counterparts. This shows that even though Republicans had more money from which to draw from for the campaign, the turnout of constituents still matters.
+Prior to this election, the Republicans held 11 seats in Illinois, and the Democrats held eight. However, in this election the Republicans lost five seats, and the Democrats gained four seats. This interesting given that the graphs above shows that in this state, there were more committees contributing money to Republican candidates with a higher total number of contributions when compared to their Democratic counterparts.However, because the transaction type is unknown no further conclusion can be made from the graph above. 
 
 ```{r kable, results = 'asis'}
 Contributions_Cand2<- candidates%>%
@@ -96,7 +96,7 @@ kable(Contributions_Cand2)
 
 # Post-hoc Analysis: Transaction Type 
 
-When we did our peer presentation, one piece of feedback that we received is that we didn't filter by any of the transaction types in our main graph. At that time we told our peers if we filtered by certain transaction types, then we would get very few results for the state of Maine. As such we decided to include the graph below, which classifies the contributions to the candidates based on their transaction type. 
+When we did our peer presentation, one piece of feedback that we received is that we didn't filter by any of the transaction types in our main graph. At that time we told our peers if we filtered by certain transaction types, then we would get very few results for the state of Maine. As a result we decided to include the graph below, which classifies the contributions to the candidates based on their transaction type. 
 
 ```{r}
 Joined_table2<- candidates%>%
@@ -129,7 +129,7 @@ labs(caption = "Note. For more information about the transaction types see Appen
 
 The graph above shows that in the State of Maine, contributions were only classified under two different transaction types, either party expenditure or communication costs for candidate. 
 
-In Massachussets, most of the contributions for the Democratic candidates were for communcation costs for the candidates. For Republican candidates, about equal amounts were spent for opposingn the candidates as for advocating the condidate. Perhaps a slight more advocating. 
+In Massachussets, most of the contributions for the Democratic candidates were for communcation costs for the candidates. For Republican candidates, about equal amounts were spent for opposingn the candidates as for advocating the candidate. Perhaps a slight more for advocating. 
 
 The most interesting contributions come from the state of Illinois, where the majority of contributions for both parties were designated towards opposing a candidates election. 
 
